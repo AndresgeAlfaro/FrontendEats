@@ -1,0 +1,30 @@
+:root {
+  --cleta-primary: #2d5016;
+  --cleta-light: #e8f5e0;
+}
+body {
+  background-color: #f8faf6;
+  min-height: 100vh;
+}
+.navbar-brand {
+  font-weight: 700;
+  color: var(--cleta-primary) !important;
+}
+.btn-cleta {
+  background-color: var(--cleta-primary);
+  color: white;
+  border-color: var(--cleta-primary);
+}
+.btn-cleta:hover {
+  background-color: #234012;
+  color: white;
+  border-color: #234012;
+}
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+.table-responsive {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}

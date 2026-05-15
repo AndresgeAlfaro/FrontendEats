@@ -1,52 +1,38 @@
-import { useState } from 'react';
-import Inicio from './pages/Inicio';
-import Clientes from './pages/Clientes';
-import Restaurantes from './pages/Restaurantes';
-import Repartidores from './pages/Repartidores';
-import Pedidos from './pages/Pedidos';
-import Reportes from './pages/Reportes';
+import { useEffect, useState } from 'react';
+import CletaApp from './cleta/CletaApp';
+import LegacyDotnetApp from './LegacyDotnetApp';
 
-const PAGES = {
-  inicio: { label: 'Inicio', Component: Inicio },
-  clientes: { label: 'Clientes', Component: Clientes },
-  restaurantes: { label: 'Restaurantes', Component: Restaurantes },
-  repartidores: { label: 'Repartidores', Component: Repartidores },
-  pedidos: { label: 'Pedidos', Component: Pedidos },
-  reportes: { label: 'Reportes', Component: Reportes }
-};
+function routingMode() {
+  const raw = window.location.hash.replace(/^#\/?/, '').trim().toLowerCase();
+  if (!raw || raw === '/') return 'supabase';
+  if (raw === 'dotnet' || raw === 'api-local' || raw === 'sqlite') return 'dotnet';
+  return 'supabase';
+}
 
 export default function App() {
-  const [page, setPage] = useState('inicio');
-  const { Component } = PAGES[page] || PAGES.inicio;
+  const [mode, setMode] = useState(routingMode);
+
+  useEffect(() => {
+    const onHash = () => setMode(routingMode());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+
+  if (mode === 'dotnet') {
+    return <LegacyDotnetApp />;
+  }
 
   return (
-    <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
-        <div className="container">
-          <span className="navbar-brand">CletaEats</span>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle">
-            <span className="navbar-toggler-icon" />
-          </button>
-          <div className="collapse navbar-collapse" id="nav">
-            <ul className="navbar-nav me-auto">
-              {Object.entries(PAGES).map(([key, { label }]) => (
-                <li className="nav-item" key={key}>
-                  <button
-                    className={`nav-link ${page === key ? 'active fw-semibold' : ''}`}
-                    onClick={() => setPage(key)}
-                    type="button"
-                  >
-                    {label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <main className="container py-4">
-        <Component />
-      </main>
-    </>
+    <div className="position-relative min-vh-100">
+      <CletaApp />
+      <div
+        className="position-fixed bottom-0 end-0 px-2 py-1 small rounded-top shadow-sm bg-white bg-opacity-75 border border-bottom-0"
+        style={{ zIndex: 1040 }}
+      >
+        <a href="#dotnet" className="link-secondary text-decoration-none">
+          Consola API .NET (SQLite)
+        </a>
+      </div>
+    </div>
   );
 }

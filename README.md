@@ -1,99 +1,76 @@
 # CletaEats Frontend
 
-Interfaz web en **React** con **Bootstrap 5** para probar el backend de CletaEats. Permite registrar clientes, restaurantes y repartidores, realizar pedidos y consultar reportes.
+Interfaz web en **React** + **Vite** + **Bootstrap 5**. Hay **dos modos** alineados con el monorepo:
+
+| Modo | URL | Backend |
+|------|-----|---------|
+| **Principal** | `http://localhost:5173/` o `http://localhost:5173/#/` | **Supabase** (PostgreSQL + Auth). UI en `src/cleta/` (`CletaApp`, `CletaContext`, `supabaseRepository.js`). |
+| **Consola API local** | `http://localhost:5173/#dotnet` | **ASP.NET Core + SQLite** (`../Backend/...`). Pantallas en `src/pages/` que llaman a `src/api.js` vía proxy `/api` → `http://localhost:5000`. |
+
+El punto de entrada es `src/App.jsx`: elige el modo según el hash (`#dotnet` / `#api-local` / `#sqlite` equivalen a la consola .NET).
 
 ---
 
 ## Requisitos
 
-- **Node.js** 18+ (recomendado LTS) y **npm**.
-
-Comprobar:
-
-```bash
-node --version
-npm --version
-```
+- **Node.js** 18+ y **npm**.
+- Para **Supabase**: proyecto en la nube y variables en `src/cleta/supabaseConfig.js` (o el archivo que use el cliente).
+- Para **API .NET**: **.NET 8** y el backend en ejecución (véase `../Backend/CletaEatsBackend/README.md`).
 
 ---
 
 ## Estructura principal
 
-| Carpeta / archivo | Descripción |
-|-------------------|-------------|
-| `package.json` | Dependencias (react, react-dom, bootstrap) y scripts (dev, build, preview). |
-| `vite.config.js` | Configuración de Vite; proxy de `/api` al backend en `http://localhost:5000`. |
-| `index.html` | Punto de entrada HTML. |
-| `src/main.jsx` | Entrada de React; importa Bootstrap CSS/JS y `App`. |
-| `src/App.jsx` | Navegación y rutas internas (páginas). |
-| `src/api.js` | Funciones para llamar a la API del backend (clientes, restaurantes, repartidores, pedidos, reportes). |
-| `src/index.css` | Estilos globales y tema (colores CletaEats). |
-| `src/pages/` | Páginas: Inicio, Clientes, Restaurantes, Repartidores, Pedidos, Reportes. |
+| Ruta | Descripción |
+|------|-------------|
+| `vite.config.js` | Proxy `/api` → `http://localhost:5000` (solo la consola `#dotnet`). |
+| `src/main.jsx` | React + `CletaProvider` + `App`. |
+| `src/App.jsx` | Enrutado por hash: `CletaApp` vs `LegacyDotnetApp`. |
+| `src/LegacyDotnetApp.jsx` | Navbar Bootstrap + páginas contra `api.js`. |
+| `src/cleta/` | App principal Supabase (login, roles, CRUD remoto). |
+| `src/pages/` | Formularios de prueba contra la API SQLite (modo `#dotnet`). |
+| `src/api.js` | Fetch a `/api/...` (controladores `*ApiController`). |
+| `src/cleta/backendDotnet.js` | Mapeo DTO .NET ↔ modelo UI (uso opcional; la consola usa `api.js` directo). |
 
 ---
 
 ## Instalación y ejecución
 
-1. Instalar dependencias:
+```bash
+cd Frontend
+npm install
+npm run dev
+```
 
-   ```bash
-   cd Frontend
-   npm install
-   ```
-
-2. Arrancar el backend (en otra terminal):
+1. **Solo Supabase**: abre `http://localhost:5173/`. El enlace inferior *Consola API .NET* lleva a `#dotnet`.
+2. **Probar SQLite**: en otra terminal:
 
    ```bash
    cd Backend/CletaEatsBackend/CletaEatsBackend
    dotnet run
    ```
 
-   La API debe estar en **http://localhost:5000**.
-
-3. Arrancar el frontend:
-
-   ```bash
-   npm run dev
-   ```
-
-   Se abre en **http://localhost:5173**. Las peticiones a `/api/*` se redirigen al backend gracias al proxy de Vite.
+   Luego `http://localhost:5173/#dotnet`.
 
 ---
 
-## Scripts disponibles
+## Scripts
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run dev` | Servidor de desarrollo (Vite) con recarga en caliente. |
-| `npm run build` | Build de producción en la carpeta `dist/`. |
-| `npm run preview` | Sirve la carpeta `dist/` localmente para probar el build. |
+| `npm run dev` | Servidor Vite (5173). |
+| `npm run build` | Salida en `dist/`. |
+| `npm run preview` | Sirve `dist/` localmente. |
 
 ---
 
-## Páginas y uso
+## Producción
 
-- **Inicio**: Descripción y requisito de tener el backend en ejecución.
-- **Clientes**: Registrar cliente (cédula, nombre, dirección, tarjeta, celular, correo) y listar activos o suspendidos.
-- **Restaurantes**: Registrar restaurante (nombre, cédula jurídica, dirección, tipo de comida) y ver listado; botón "Combos" para ver combos por restaurante.
-- **Repartidores**: Registrar repartidor y listar todos o solo los de 0 amonestaciones.
-- **Pedidos**: Formulario para realizar pedido (restaurante, cédula cliente, distancia, feriado, items con combo/cantidad/precio) y otro para marcar pedido como entregado (id pedido, id repartidor).
-- **Reportes**: Lista de reportes; al elegir uno se muestra el resultado (montos, hora pico, quejas, etc.).
+Configura la URL base de la API si no usas el proxy de Vite (variable de entorno o constante en `src/api.js`). Para Supabase, usa las claves y URL del proyecto desplegado.
 
 ---
 
-## Configuración del backend
+## Relación con otros módulos
 
-Por defecto el frontend espera la API en **http://localhost:5000** a través del proxy de Vite (rutas relativas `/api/...`). Si cambias el puerto o el host del backend, ajusta el proxy en `vite.config.js`:
-
-```js
-server: {
-  proxy: {
-    '/api': {
-      target: 'http://localhost:PUERTO',
-      changeOrigin: true
-    }
-  }
-}
-```
-
-Para producción, tendrías que configurar la URL base de la API (variable de entorno o constante en `src/api.js`).
+- La **app Android** (`../AplicacionMovil`) usa **Supabase**, no esta API .NET.
+- La **API .NET** sirve para la consola web `#dotnet`, Swagger en `http://localhost:5000/swagger` y desarrollo local SQLite.

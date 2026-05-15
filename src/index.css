@@ -1,30 +1,223 @@
+/* Tema alineado con Theme.kt / Color.kt (delivery) */
 :root {
-  --cleta-primary: #2d5016;
-  --cleta-light: #e8f5e0;
+  --delivery-green: #00a862;
+  --delivery-ink: #1c1c1e;
+  --delivery-surface: #f7f7f8;
+  --delivery-surface-dim: #ececed;
 }
+
 body {
-  background-color: #f8faf6;
+  background-color: var(--delivery-surface);
+  color: var(--delivery-ink);
   min-height: 100vh;
 }
-.navbar-brand {
-  font-weight: 700;
-  color: var(--cleta-primary) !important;
+
+.delivery-auth {
+  min-height: 100vh;
+  background: var(--delivery-surface);
 }
-.btn-cleta {
-  background-color: var(--cleta-primary);
-  color: white;
-  border-color: var(--cleta-primary);
+
+.delivery-main {
+  background: var(--delivery-surface);
 }
-.btn-cleta:hover {
-  background-color: #234012;
-  color: white;
-  border-color: #234012;
-}
-.card {
-  border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-}
-.table-responsive {
-  border-radius: 0.5rem;
+
+.delivery-hero {
+  position: relative;
+  border-radius: 16px;
   overflow: hidden;
+  min-height: 104px;
+}
+
+.delivery-hero--sm {
+  min-height: 80px;
+}
+
+.delivery-hero__img {
+  width: 100%;
+  height: 104px;
+  object-fit: cover;
+  display: block;
+}
+
+.delivery-hero--sm .delivery-hero__img {
+  height: 80px;
+}
+
+.delivery-hero__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px 12px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.delivery-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: none;
+  margin-bottom: 0;
+}
+
+.delivery-row__thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.delivery-row__title {
+  font-weight: 600;
+  color: var(--delivery-ink);
+}
+
+.delivery-row__sub {
+  font-size: 0.8rem;
+  color: rgba(28, 28, 30, 0.72);
+}
+
+.delivery-row--primary {
+  background: var(--delivery-green);
+  color: #fff;
+}
+
+.delivery-row--primary .delivery-row__title,
+.delivery-row--primary .delivery-row__sub {
+  color: #fff;
+}
+
+.delivery-row--primary:disabled {
+  opacity: 0.6;
+}
+
+.delivery-row--outline {
+  background: #fff;
+  border: 1px solid var(--delivery-surface-dim);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.delivery-tile {
+  display: block;
+  width: 100%;
+  border: none;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  text-align: left;
+}
+
+.delivery-tile__img-wrap {
+  width: 100%;
+  max-height: 100px;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+}
+
+.delivery-tile__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.delivery-tile__body {
+  padding: 10px;
+}
+
+.delivery-tile__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.delivery-tile__sub {
+  font-size: 0.75rem;
+  color: rgba(28, 28, 30, 0.72);
+}
+
+.delivery-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: var(--delivery-green);
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.delivery-chip--outline {
+  background: #fff;
+  color: var(--delivery-green);
+  border: 1px solid var(--delivery-green);
+}
+
+.delivery-chip__img {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.delivery-toolbar-icon img {
+  border: 1px solid var(--delivery-surface-dim);
+}
+
+.navbar-brand,
+h1,
+h2,
+.h5,
+.h6 {
+  color: var(--delivery-ink);
+}
+
+.btn-success,
+.bg-success-subtle {
+  --bs-btn-bg: var(--delivery-green);
+  --bs-btn-border-color: var(--delivery-green);
+}
+
+.progress-bar.bg-success {
+  background-color: var(--delivery-green) !important;
+}
+
+.list-group-item.active {
+  background-color: rgba(0, 168, 98, 0.12);
+  border-color: var(--delivery-surface-dim);
+  color: var(--delivery-ink);
+}
+
+.delivery-scroll {
+  max-width: 720px;
+}
+
+.delivery-auth__inner {
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.delivery-section-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(28, 28, 30, 0.55);
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.form-control:focus {
+  border-color: var(--delivery-green);
+  box-shadow: 0 0 0 0.2rem rgba(0, 168, 98, 0.2);
 }
